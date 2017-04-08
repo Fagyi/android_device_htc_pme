@@ -322,8 +322,7 @@ PRODUCT_PACKAGES += \
 # IPv6
 PRODUCT_PACKAGES += \
     ebtables \
-    ethertypes \
-    libebtc
+    ethertypes
 
 # IRSC
 PRODUCT_COPY_FILES += \

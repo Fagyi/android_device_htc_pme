@@ -177,7 +177,7 @@ PRODUCT_PACKAGES += \
 
 # Device Settings
 PRODUCT_PACKAGES += \
-    DeviceSettings
+  #  DeviceSettings
 
 # Display
 PRODUCT_PACKAGES += \

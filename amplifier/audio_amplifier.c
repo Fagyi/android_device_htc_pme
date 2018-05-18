@@ -34,6 +34,7 @@
 typedef struct amp_device {
     amplifier_device_t amp_dev;
     tfa_t *tfa;
+    tfa_profile_t profile;
     audio_mode_t mode;
 } amp_device_t;
 
@@ -47,10 +48,6 @@ static int amp_set_mode(struct amplifier_device *device, audio_mode_t mode)
     dev->mode = mode;
     return ret;
 }
-
-enum {
-      PROFILE_MUSIC, PROFILE_RINGTONE, PROFILE_FM, PROFILE_VIDEO_RECORD, PROFILE_HANDSFREE_NB, PROFILE_HANDSFREE_WB, PROFILE_HANDSFREE_SWB, PROFILE_HANDSET, PROFILE_VOIP, PROFILE_MFG, PROFILE_AUDIO_EVALUATION, PROFILE_CALIBRATION
-};
 
 enum {
     IS_EARPIECE, IS_SPEAKER, IS_VOIP, IS_OTHER
@@ -159,9 +156,20 @@ static int amp_enable_output_devices(struct amplifier_device *device, uint32_t s
 {
     amp_device_t *dev = (amp_device_t *) device;
     int profile = select_profile(dev->mode, snd_device);
-    if (profile >= 0) {
-        tfa_apply_profile(dev->tfa, profile);
+
+    if (profile < 0 || profile >= PROFILE_MAX) {
+        ALOGE("%s: Invalid profile: %d", __func__, profile);
+        goto out;
     }
+    if (profile == amp_dev->profile) {
+        // no need to re-apply current profile
+        goto out;
+    }
+
+    tfa_apply_profile(dev->tfa, profile);
+    amp_dev->profile = profile;
+
+out:
     return 0;
 }
 

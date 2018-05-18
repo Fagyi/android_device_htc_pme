@@ -5,10 +5,6 @@ static bool is_variant_verizon(std::string bootcid) {
 }
 
 static const char *htc_verizon_properties =
-    "ro.build.fingerprint=htc/HTCOneM10vzw/htc_pmewl:6.0.1/MMB29M/774095.8:user/release-keys\n"
-    "ro.build.product=htc_pmewl\n"
-    "ro.product.device=htc_pmewl\n"
-    "ro.product.model=HTC6545LVW\n"
     "ro.telephony.default_network=10\n"
     "ro.cdma.home.operator.alpha=Verizon\n"
     "ro.cdma.home.operator.numeric=310012\n"

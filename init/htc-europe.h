@@ -11,10 +11,6 @@ static bool is_variant_europe(std::string bootcid) {
 }
 
 static const char *htc_europe_properties =
-    "ro.build.fingerprint=htc/pmeuhl_00401/htc_pmeuhl:8.0.0/OPR1.170623.027/1012001.2:user/release-keys\n"
-    "ro.build.product=htc_pmeuhl\n"
-    "ro.product.device=htc_pmeuhl\n"
-    "ro.product.model=HTC 10\n"
     "ro.telephony.default_network=0\n"
     "ro.telephony.ipv6_capability=1\n"
     "ro.ril.vmail.23415=1571,BT,121,VDF UK\n"

@@ -18,25 +18,22 @@
 //#define LOG_NDEBUG 0
 
 #include <stdio.h>
-#include <stdint.h>
 #include <stdlib.h>
-#include <sys/types.h>
 #include <errno.h>
 #include <memory.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <string.h>
 
 #include <cutils/log.h>
-#include <cutils/str_parms.h>
-
-#include <sys/ioctl.h>
 #include <tinyalsa/asoundlib.h>
 #include "tfa.h"
 
 #define TRACE_REGISTERS 0
 
 #define UNUSED __attribute__ ((unused))
+
+#include <linux/ioctl.h>
+#include <sound/htc_audio_ioctl.h>
 
 struct tfaS {
     struct mixer *mixer;

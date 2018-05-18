@@ -5,10 +5,6 @@ static bool is_variant_ee_uk(std::string bootcid) {
 }
 
 static const char *htc_ee_uk_properties =
-    "ro.build.fingerprint=htc/pmeuhl_00091/htc_pmeuhl:6.0.1/MMB29M/738269.4:user/release-keys\n"
-    "ro.build.product=htc_pmeuhl\n"
-    "ro.product.device=htc_pmeuhl\n"
-    "ro.product.model=HTC 10\n"
     "ro.telephony.ipv6_capability=1\n"
     "ro.ril.oem.ecclist=999,112,911\n"
     "ro.ril.enable.a52=0\n"

@@ -17,10 +17,8 @@
 #ifndef __TFA_H__
 #define __TFA_H__
 
-#include <pthread.h>
 #include <tinyalsa/asoundlib.h>
 #include <stdbool.h>
-#include <stdint.h>
 
 typedef struct tfaS tfa_t;
 
@@ -33,5 +31,21 @@ bool tfa_wait_for_init(tfa_t *tfa);
 void tfa_apply_profile(tfa_t *tfa, int profile);
 
 void tfa_destroy(tfa_t *);
+
+typedef enum {
+    PROFILE_MUSIC = 0,
+    PROFILE_RINGTONE,
+    PROFILE_FM,
+    PROFILE_VIDEO_RECORD,
+    PROFILE_HANDSFREE_NB,
+    PROFILE_HANDSFREE_WB,
+    PROFILE_HANDSFREE_SWB,
+    PROFILE_HANDSET,
+    PROFILE_VOIP,
+    PROFILE_MFG,
+    PROFILE_AUDIO_EVALUATION,
+    PROFILE_CALIBRATION,
+    PROFILE_MAX
+} tfa_profile_t;
 
 #endif

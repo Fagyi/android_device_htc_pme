@@ -8,10 +8,6 @@ static bool is_variant_asia(std::string bootcid) {
 }
 
 static const char *htc_asia_properties =
-    "ro.build.fingerprint=htc/pmeuhl_00710/htc_pmeuhl:6.0.1/MMB29M/738269.10:user/release-keys\n"
-    "ro.build.product=htc_pmeuhl\n"
-    "ro.product.device=htc_pmeuhl\n"
-    "ro.product.model=HTC 2PS6200\n"
     "ro.telephony.ipv6_capability=1\n"
     "ro.ril.vmail.505029=+61411000212\n"
     "ro.ril.vmail.50506=+61430005333\n"

@@ -81,9 +81,6 @@ ro.frp.pst=/dev/block/bootdevice/by-name/frp
 persist.hvdcp.allow_opti=1
 ro.cutoff_voltage_mv=3050
 
-# Google Assistant
-ro.opa.eligible_device=true
-
 # IMS
 service.qti.ims.enabled=1
 persist.data.iwlan.enable=true
@@ -112,8 +109,11 @@ vidc.enc.dcvs.extra-buff-count=2
 ro.nfc.port=I2C
 
 # Perf
+ro.vendor.extension_library=libqti-perfd-client.so
 ro.vendor.qti.sys.fw.bg_apps_limit=60
 sdm.perf_hint_window=50
+ro.core_ctl_min_cpu=2
+ro.core_ctl_max_cpu=4
 
 # Property for game detection feature
 debug.enable.gamed=0
@@ -186,3 +186,10 @@ wifi.interface=wlan0
 # for smoother scrolling and better responsiveness
 ro.min.fling_velocity=160
 ro.max.fling_velocity=20000
+
+#VoLTE
+persist.volte_enabled_by_hw=1
+persist.dbg.ims_volte_enable=1
+persist.dbg.volte_avail_ovr=1
+persist.dbg.vt_avail_ovr=1
+persist.dbg.wfc_avail_ovr=1

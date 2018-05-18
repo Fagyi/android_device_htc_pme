@@ -5,10 +5,6 @@ static bool is_variant_tmobile_usa(std::string bootcid) {
 }
 
 static const char *htc_tmobile_usa_properties =
-    "ro.build.fingerprint=htc/pmewl_00531/htc_pmewl:6.0.1/MMB29M/737608.1:user/release-keys\n"
-    "ro.build.product=htc_pmewl\n"
-    "ro.product.device=htc_pmewl\n"
-    "ro.product.model=HTC 10\n"
     "ro.telephony.ipv6_capability=1\n"
     "ro.phone.min_match=10\n"
     "ro.ril.vmail.310260=+18056377243\n"

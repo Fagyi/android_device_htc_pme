@@ -6,10 +6,6 @@ static bool is_variant_o2_uk(std::string bootcid) {
 }
 
 static const char *htc_o2_uk_properties =
-    "ro.build.fingerprint=htc/pmeuhl_00206/htc_pmeuhl:6.0.1/MMB29M/738269.4:user/release-keys\n"
-    "ro.build.product=htc_pmeuhl\n"
-    "ro.product.device=htc_pmeuhl\n"
-    "ro.product.model=HTC 10\n"
     "ro.telephony.default_network=0\n"
     "ro.ril.vmail.23410=901\n"
     "ro.ril.vmail.27202=171\n"

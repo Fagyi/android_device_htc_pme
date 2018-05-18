@@ -5,10 +5,6 @@ static bool is_variant_mexico(std::string bootcid) {
 }
 
 static const char *htc_mexico_properties =
-    "ro.build.fingerprint=htc/pmewl_00600/htc_pmewl:6.0.1/MMB29M/737608.3:user/release-keys\n"
-    "ro.build.product=htc_pmewl\n"
-    "ro.product.device=htc_pmewl\n"
-    "ro.product.model=HTC 10\n"
     "ro.phone.min_match=10\n"
     "ro.ril.vmail.334020=*86\n"
     "ro.ril.oem.ecclist=060,911,112\n"

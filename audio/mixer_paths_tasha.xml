@@ -2922,8 +2922,12 @@
     </path>
 
     <path name="camcorder-mic">
-        <path name="handset-mic" />
-    </path>
+        <path name="dual-mic-inverse" />
+        <ctl name="ADC1 Volume" value="8" />
+        <ctl name="ADC3 Volume" value="8" />
+        <ctl name="DEC7 Volume" value="84" />
+        <ctl name="DEC8 Volume" value="84" />
+     </path>
 
     <path name="hdmi-tx">
         <path name="handset-mic" />

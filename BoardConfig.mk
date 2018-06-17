@@ -44,6 +44,10 @@ TARGET_USES_64_BIT_BINDER := true
 # Use Snapdragon LLVM, if available
 TARGET_USE_SDCLANG := true
 
+# Bootanimation
+TARGET_BOOTANIMATION_PRELOAD := true
+TARGET_BOOTANIMATION_TEXTURE_CACHE := true
+
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := MSM8996
 TARGET_NO_BOOTLOADER := true
@@ -116,7 +120,7 @@ TARGET_USES_QCOM_MM_AUDIO := true
 USE_CUSTOM_AUDIO_POLICY := 1
 USE_LEGACY_AUDIO_DAEMON := false
 USE_LEGACY_AUDIO_MEASUREMENT := false
-# USE_XML_AUDIO_POLICY_CONF := 1
+USE_XML_AUDIO_POLICY_CONF := 1
 
 BOARD_USES_ALSA_AUDIO := true
 BOARD_ROOT_EXTRA_SYMLINKS := /vendor/lib/dsp:/dsp
@@ -140,6 +144,14 @@ BOARD_USES_QCNE := true
 
 # CPU
 TARGET_USES_INTERACTION_BOOST := true
+
+# Dex
+ifeq ($(HOST_OS),linux)
+  ifneq ($(TARGET_BUILD_VARIANT),eng)
+    WITH_DEXPREOPT ?= true
+  endif
+endif
+WITH_DEXPREOPT_BOOT_IMG_AND_SYSTEM_SERVER_ONLY ?= true
 
 # Display
 MAX_VIRTUAL_DISPLAY_DIMENSION := 4096
@@ -167,13 +179,10 @@ TARGET_PER_MGR_ENABLED := true
 TARGET_HW_DISK_ENCRYPTION := true
 
 # Filesystem
-TARGET_ALLOW_LEGACY_AIDS := true
 TARGET_FS_CONFIG_GEN := $(DEVICE_PATH)/config.fs
 TARGET_EXFAT_DRIVER := exfat
 
 # GPS
-BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := msm8996
-BOARD_VENDOR_QCOM_LOC_PDK_FEATURE_SET := true
 TARGET_NO_RPC := true
 USE_DEVICE_SPECIFIC_GPS := true
 BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := default
@@ -182,6 +191,9 @@ BOARD_VENDOR_QCOM_LOC_PDK_FEATURE_SET := true
 # HIDL
 DEVICE_MANIFEST_FILE := $(DEVICE_PATH)/manifest.xml
 DEVICE_MATRIX_FILE   := $(DEVICE_PATH)/compatibility_matrix.xml
+
+# HWUI
+HWUI_COMPILE_FOR_PERF := true
 
 # Init
 TARGET_PLATFORM_DEVICE_BASE := /devices/soc.0/
@@ -216,7 +228,7 @@ BOARD_USERDATAIMAGE_PARTITION_SIZE := 26323451904
 
 # Power
 TARGET_HAS_NO_WIFI_STATS := true
-TARGET_USES_INTERACTION_BOOST := true
+TARGET_POWERHAL_VARIANT := qcom
 
 # Qualcomm
 BOARD_USES_QCOM_HARDWARE := true
@@ -236,13 +248,7 @@ TARGET_RIL_VARIANT := caf
 # BOARD_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy
 
 # SHIMS
-TARGET_LD_SHIM_LIBS := /system/lib/liblog.so|/system/lib/liblog_htc.so \
-    /system/lib64/liblog.so|/system/lib64/liblog_htc.so \
-    /system/vendor/lib/libizat_core.so|/system/vendor/lib/libshim_gps.so \
-    /system/vendor/lib64/libizat_core.so|/system/vendor/lib64/libshim_gps.so \
-    /system/lib/libpower.so|/system/vendor/lib/libshim_power.so \
-    /system/lib64/libpower.so|/system/vendor/lib64/libshim_power.so \
-    /system/vendor/lib64/libril.so|/system/vendor/lib64/libshim_ril.so
+TARGET_LD_SHIM_LIBS := /system/vendor/lib64/libril.so|/system/vendor/lib64/libshim_ril.so
 
 # Treble
 BOARD_PROPERTY_OVERRIDES_SPLIT_ENABLED := true

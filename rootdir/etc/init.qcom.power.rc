@@ -1,7 +1,16 @@
 on init
-    write /sys/module/lpm_levels/parameters/sleep_disabled "Y"
+    write /sys/block/mmcblk0/queue/scheduler "noop"
+    write /sys/block/mmcblk0/bdi/read_ahead_kb 512
+    write /sys/block/mmcblk1/bdi/read_ahead_kb 512
+
+    # Drop write bit from cpu_max_freq so that libqti-perfd can't set it
+    chmod 0444 /sys/module/msm_performance/parameters/cpu_max_freq
 
 on boot
+    # Bring back main cores CPU 0,2
+    write /sys/devices/system/cpu/cpu0/online 1
+    write /sys/devices/system/cpu/cpu2/online 1
+
     # Update foreground and background cpusets
     write /dev/cpuset/foreground/cpus 0-3
     write /dev/cpuset/background/cpus 0-3
@@ -20,16 +29,16 @@ on boot
     # Enable sched boost
     write /proc/sys/kernel/sched_boost 1
 
-on enable-low-power
+on property:sys.boot_completed=1
+    # Set GPU idle frequency to 133 MHz
+    write /sys/class/kgsl/kgsl-3d0/default_pwrlevel 6
+
     # Disable thermal hotplug to switch governor
     write /sys/module/msm_thermal/core_control/enabled 0
 
     # Enable Adaptive LMK
     write /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk 1
     write /sys/module/lowmemorykiller/parameters/vmpressure_file_min 81250
-
-    # Set sync wakee policy tunable
-    write /proc/sys/kernel/sched_prefer_sync_wakee_to_waker 1
 
     # Configure governor settings for little cluster
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "interactive"
@@ -46,9 +55,6 @@ on enable-low-power
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 307200
     write /sys/devices/system/cpu/cpu0/cpufreq/interactive/ignore_hispeed_on_notif 1
     write /sys/devices/system/cpu/cpu0/cpufreq/interactive/enable_prediction 1
-
-    # Bring CPU2 online
-    write /sys/devices/system/cpu/cpu2/online 1
 
     # Configure governor settings for big cluster
     write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor "interactive"
@@ -69,9 +75,12 @@ on enable-low-power
     # Re-enable thermal hotplug
     write /sys/module/msm_thermal/core_control/enabled 1
 
-    # Input boost config
-    write /sys/module/cpu_boost/parameters/input_boost_freq "0:1324800 2:1324800"
-    write /sys/module/cpu_boost/parameters/input_boost_ms 40
+    # Input boost configuration
+    write /sys/module/cpu_boost/parameters/input_boost_freq "0:1324800 2:0"
+    write /sys/module/cpu_boost/parameters/input_boost_ms 80
+
+    # Disable touch boost
+    write /sys/module/msm_performance/parameters/touchboost 0
 
     # Set big.LITTLE scheduler parameters
     write /proc/sys/kernel/sched_boost 0
@@ -81,6 +90,21 @@ on enable-low-power
     write /proc/sys/kernel/sched_freq_dec_notify 400000
     write /proc/sys/kernel/sched_spill_nr_run 3
     write /proc/sys/kernel/sched_init_task_load 100
+
+    # Enable core control
+    write /sys/devices/system/cpu/cpu0/core_ctl/min_cpus 0
+    write /sys/devices/system/cpu/cpu0/core_ctl/max_cpus 2
+    write /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres 72
+    write /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres 28
+    write /sys/devices/system/cpu/cpu0/core_ctl/offline_delay_ms 100
+    write /sys/devices/system/cpu/cpu0/core_ctl/is_big_cluster 1
+    write /sys/devices/system/cpu/cpu0/core_ctl/task_thres 4
+
+    # Enable dynamic clock gating
+    write /sys/module/lpm_levels/lpm_workarounds/dynamic_clock_gating 1
+
+    # Enable timer migration to little cluster
+    write /proc/sys/kernel/power_aware_timer_migration 1
 
     # Enable bus-dcvs
     write /sys/class/devfreq/soc:qcom,cpubw/governor "bw_hwmon"
@@ -104,29 +128,30 @@ on enable-low-power
     write /sys/class/devfreq/soc:qcom,memlat-cpu2/polling_interval 10
     write /sys/class/devfreq/soc:qcom,mincpubw/governor "cpufreq"
 
-    # Enable all LPMs (this will enable C4, D4, D3, E4 and M3 LPMs)
-    write /sys/module/lpm_levels/parameters/sleep_disabled "N"
+    # Enable LPM Prediction
+    write /sys/module/lpm_levels/parameters/lpm_prediction 1
 
-    # Set idle GPU to 133 Mhz
-    write /sys/class/kgsl/kgsl-3d0/default_pwrlevel 6
+    # Enable all LPMs (this will enable C4, D4, D3, E4 and M3 LPMs)
+    write /sys/module/lpm_levels/parameters/sleep_disabled 0
+
+    # VM
+    write /proc/sys/vm/dirty_background_ratio 20
+    write /proc/sys/vm/dirty_expire_centisecs 100
+    write /proc/sys/vm/swappiness 5
+    write /proc/sys/vm/vfs_cache_pressure 60
 
     # Set perfd properties
     setprop sys.post_boot.parsed 1
 
-on property:sys.boot_completed=1
-    trigger enable-low-power
-
-    # update cpusets now that boot is complete and we want better load balancing
-    write /dev/cpuset/top-app/cpus 0-3
-    write /dev/cpuset/foreground/cpus 0-2
-    write /dev/cpuset/background/cpus 0
-    write /dev/cpuset/system-background/cpus 0-2
-
     # Set I/O squeduler
     setprop sys.io.scheduler "bfq"
 
-on property:init.svc.recovery=running
-    trigger enable-low-power
+    # update cpusets now that boot is complete and we want better load balancing
+    write /dev/cpuset/top-app/cpus 0-3
+    write /dev/cpuset/foreground/boost/cpus 0-2
+    write /dev/cpuset/foreground/cpus 0-2
+    write /dev/cpuset/background/cpus 0
+    write /dev/cpuset/system-background/cpus 0-2
 
 on charger
     write /sys/devices/system/cpu/cpu2/online 0

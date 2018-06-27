@@ -4,10 +4,6 @@
         <permission name="android.permission.INTERACT_ACROSS_USERS"/>
     </privapp-permissions>
 
-    <privapp-permissions package="com.qualcomm.location">
-        <permission name="android.permission.CONTROL_LOCATION_UPDATES"/>
-    </privapp-permissions>
-
     <privapp-permissions package="com.qualcomm.qcrilmsgtunnel">
         <permission name="android.permission.INTERACT_ACROSS_USERS"/>
     </privapp-permissions>

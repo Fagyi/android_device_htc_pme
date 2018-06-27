@@ -2,6 +2,7 @@ on init
     write /sys/block/mmcblk0/queue/scheduler "noop"
     write /sys/block/mmcblk0/bdi/read_ahead_kb 512
     write /sys/block/mmcblk1/bdi/read_ahead_kb 512
+    write /sys/module/lpm_levels/parameters/sleep_disabled "Y"
 
     # Drop write bit from cpu_max_freq so that libqti-perfd can't set it
     chmod 0444 /sys/module/msm_performance/parameters/cpu_max_freq
@@ -128,11 +129,8 @@ on property:sys.boot_completed=1
     write /sys/class/devfreq/soc:qcom,memlat-cpu2/polling_interval 10
     write /sys/class/devfreq/soc:qcom,mincpubw/governor "cpufreq"
 
-    # Enable LPM Prediction
-    write /sys/module/lpm_levels/parameters/lpm_prediction 1
-
     # Enable all LPMs (this will enable C4, D4, D3, E4 and M3 LPMs)
-    write /sys/module/lpm_levels/parameters/sleep_disabled 0
+    write /sys/module/lpm_levels/parameters/sleep_disabled "N"
 
     # VM
     write /proc/sys/vm/dirty_background_ratio 20

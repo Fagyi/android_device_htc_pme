@@ -32,7 +32,7 @@
 #include "platform_lib_macros.h"
 
 #ifndef USE_GLIB
-#include "../../../log_util.h"
+#include <log_util.h>
 #else
 
 #include <stdio.h>

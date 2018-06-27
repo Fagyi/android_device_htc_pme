@@ -116,10 +116,8 @@ PRODUCT_COPY_FILES += \
 # Audio
 PRODUCT_PACKAGES += \
     android.hardware.audio@2.0-impl \
-    android.hardware.audio@2.0-service \
     android.hardware.audio.effect@2.0-impl \
     android.hardware.soundtrigger@2.0-impl \
-    audiod \
     audio.a2dp.default \
     audio_amplifier.msm8996 \
     audio.primary.msm8996 \
@@ -248,7 +246,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/gps/etc/gps.conf.default:$(TARGET_COPY_OUT_VENDOR)/etc/gps.conf.default \
     $(LOCAL_PATH)/gps/etc/gps.conf.sprint:$(TARGET_COPY_OUT_VENDOR)/etc/gps.conf.sprint \
     $(LOCAL_PATH)/gps/etc/izat.conf:$(TARGET_COPY_OUT_VENDOR)/etc/izat.conf \
-    $(LOCAL_PATH)/gps/etc/flp.conf:$(TARGET_COPY_OUT_VENDOR)/etc/flp.conf \
     $(LOCAL_PATH)/gps/etc/lowi.conf:$(TARGET_COPY_OUT_VENDOR)/etc/lowi.conf \
     $(LOCAL_PATH)/gps/etc/sap.conf:$(TARGET_COPY_OUT_VENDOR)/etc/sap.conf \
     $(LOCAL_PATH)/gps/etc/xtwifi.conf:$(TARGET_COPY_OUT_VENDOR)/etc/xtwifi.conf
@@ -379,8 +376,7 @@ PRODUCT_COPY_FILES += \
 # Power
 PRODUCT_PACKAGES += \
     android.hardware.power@1.0-impl \
-    android.hardware.power@1.0-service-qti \
-    libshim_power
+    android.hardware.power@1.0-service-qti
 
 # Powerhint
 PRODUCT_COPY_FILES += \
@@ -473,6 +469,8 @@ PRODUCT_PACKAGES += \
 # Wifi
 PRODUCT_PACKAGES += \
     android.hardware.wifi@1.0-service \
+    ipacm \
+    IPACM_cfg.xml \
     libwpa_client \
     hostapd \
     wificond \

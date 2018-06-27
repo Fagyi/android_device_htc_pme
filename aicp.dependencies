@@ -1,0 +1,15 @@
+[
+  {
+    "repository":  "Fagyi/htc_pme_kernel",
+    "target_path": "kernel/htc/msm8996"
+    "branch":      "aosip-oreo"
+  },
+  {
+    "repository": "android_packages_apps_FlipFlap",
+    "target_path": "packages/apps/FlipFlap"
+  },
+  {
+    "repository": "android_packages_resources_devicesettings",
+    "target_path": "packages/resources/devicesettings"
+  }
+]

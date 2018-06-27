@@ -19,4 +19,6 @@ Camera  | 12 MP, 4000 x 3000 pixels, autofocus, LED flash, OIS
 
 Copyright 2016 - The CyanogenMod Project.
 
+Copyright 2017 - The LineageOS Project
+
 ![HTC 10](http://cdn2.gsmarena.com/vv/pics/htc/htc-10-5.jpg "HTC 10")

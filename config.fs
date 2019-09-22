@@ -118,6 +118,18 @@ user:  AID_GPS
 group: AID_GPS
 caps: NET_BIND_SERVICE
 
+[vendor/bin/mm-qcamera-daemon]
+mode: 0700
+user: AID_CAMERA
+group: AID_SHELL
+caps: SYS_NICE
+
+[system/vendor/bin/mm-qcamera-daemon]
+mode: 0700
+user: AID_CAMERA
+group: AID_SHELL
+caps: SYS_NICE
+
 [vendor/bin/loc_launcher]
 mode: 0755
 user:  AID_GPS

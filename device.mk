@@ -443,13 +443,6 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 PRODUCT_ODM_PROPERTIES += \
     ro.vendor.qti.va_odm.support=1
 
-# RCS
-PRODUCT_PACKAGES += \
-    rcs_service_aidl \
-    rcs_service_aidl.xml \
-    rcs_service_api \
-    rcs_service_api.xml
-
 # RenderScript HAL
 PRODUCT_PACKAGES += \
     android.hardware.renderscript@1.0-impl

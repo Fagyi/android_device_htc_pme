@@ -2,6 +2,7 @@ cc_binary {
     name: "android.hardware.light@2.0-service.pme",
     relative_install_path: "hw",
     init_rc: ["android.hardware.light@2.0-service.pme.rc"],
+    vintf_fragments: ["android.hardware.light@2.0-service.pme.xml"],
     srcs: ["service.cpp", "Light.cpp"],
     shared_libs: [
         "libcutils",

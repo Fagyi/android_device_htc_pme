@@ -382,6 +382,12 @@ PRODUCT_PACKAGES += \
     netutils-wrapper-1.0 \
     libandroid_net
 
+# Minijail
+PRODUCT_PACKAGES += \
+    libavservices_minijail_vendor \
+    libavservices_minijail_32 \
+    libavservices_minijail.vendor
+
 # NFC
 PRODUCT_PACKAGES += \
     android.hardware.nfc@1.1-service \

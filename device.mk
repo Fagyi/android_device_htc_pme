@@ -455,7 +455,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/seccomp/mediaextractor.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediaextractor.policy
 
 # Sensors
- PRODUCT_PACKAGES += \
+PRODUCT_PACKAGES += \
     android.hardware.sensors@1.0-impl \
     android.hardware.contexthub@1.0-service \
     android.hardware.contexthub@1.0-impl.nanohub
@@ -464,6 +464,9 @@ PRODUCT_PACKAGES += \
     nanoapp_cmd \
     nanotool \
     sensortest
+
+PRODUCT_PACKAGES += \
+    android.frameworks.sensorservice@1.0
 
 # Tethering
 PRODUCT_PROPERTY_OVERRIDES += \

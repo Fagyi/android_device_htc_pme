@@ -1,4 +1,6 @@
 service vendor.touch-hal-1-0 /vendor/bin/hw/vendor.lineage.touch@1.0-service.pme
+    interface vendor.lineage.touch@1.0::IKeyDisabler default
+    interface vendor.lineage.touch@1.0::ITouchscreenGesture default
     class hal
     user system
     group system

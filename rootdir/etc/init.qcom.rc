@@ -388,12 +388,6 @@ on post-fs-data
     #Start move time data to /data/vendor once post-fs-data done
     start vendor.move_time_data
 
-service nqnfcinfo /system/vendor/bin/nqnfcinfo
-    class late_start
-    group nfc
-    user system
-    oneshot
-
 on property:ro.vendor.iocgrp.config=1
     mkdir /dev/blkio
     mount cgroup none /dev/blkio blkio

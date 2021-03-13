@@ -63,6 +63,85 @@ on init
     chown system system /dev/cpuset/camera-daemon/tasks
     chmod 0664 /dev/cpuset/camera-daemon/tasks
 
+on fs
+    mount_all /vendor/etc/fstab.qcom
+
+    # Add rfg_3 mounting from stock. This way we will still boot if partition doesn't actually exist on the device.
+    wait /dev/block/bootdevice/by-name/rfg_3
+    mount vfat /dev/block/bootdevice/by-name/rfg_3 /firmware/wsd ro shortname=lower,uid=3012,gid=3012,dmask=277,fmask=377
+
+    # Mount cradio image
+    mkdir /firmware/cradio 0771 system system
+    mount vfat /dev/block/bootdevice/by-name/cradio /firmware/cradio ro shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
+
+    # symlink firmware to /firmware/image
+    wait /system/bin/sh
+    class_start firmware-link
+    setprop ro.boot.firmware.cpe 1
+
+    # HTC feature: Support multiple firmware image mount points
+    write /sys/module/firmware_class/parameters/fw_path /firmware/image,/firmware/adsp,/firmware/radio,/firmware/slpi,/firmware/venus,/firmware/wsd,/vendor/firmware
+
+    # Set permissions for persist partition
+    chown root system /mnt/vendor/persist
+    chmod 0771 /mnt/vendor/persist
+    mkdir /mnt/vendor/persist/bluetooth 0770 bluetooth bluetooth
+    mkdir /mnt/vendor/persist/bms 0700 root system
+    mkdir /mnt/vendor/persist/data 0700 system system
+    mkdir /mnt/vendor/persist/display 0770 system graphics
+    mkdir /mnt/vendor/persist/hvdcp_opti 0770 root system
+    mkdir /mnt/vendor/persist/time 0770 system system
+    restorecon_recursive /mnt/vendor/persist
+
+on post-fs-data
+    # Graphics
+    chmod 0664 /sys/devices/virtual/graphics/fb0/idle_time
+    chown system graphics /sys/devices/virtual/graphics/fb0/idle_time
+    write /sys/devices/virtual/graphics/fb0/idle_time 100
+
+    # NFC local data and nfcee xml storage
+    mkdir /data/nfc 0770 nfc nfc
+    mkdir /data/nfc/param 0770 nfc nfc
+    mkdir /data/vendor/nfc 0770 nfc nfc
+    mkdir /data/vendor/nfc/param 0770 nfc nfc
+
+    # NFC permissions
+    chmod 0666 /dev/pn544
+    chown nfc nfc /dev/pn544
+
+    # Create directory for fingerprint
+    mkdir /data/fpc 0770 system system
+
+    # Create folder for mm-qcamera-daemon
+    mkdir /data/vendor/camera 0770 camera camera
+
+    #create netmgr log dir
+    mkdir /data/vendor/netmgr 0770 radio radio
+    chmod 0770 /data/vendor/netmgr
+
+    # Create directory for tombstone
+    mkdir /data/tombstones 0771 system system
+    mkdir /data/tombstones/modem 0771 system system
+    mkdir /data/tombstones/lpass 0771 system system
+    mkdir /data/tombstones/wcnss 0771 system system
+    mkdir /data/tombstones/dsps 0771 system system
+
+    mkdir /data/misc/dts 0770 media audio
+    mkdir /data/misc/seemp 0700 system system
+    mkdir /data/misc/tloc/ 0700 system drmrpc
+    mkdir /data/misc/qvr 0770 system system
+    mkdir /data/misc/audio_pp 0771 media audio
+    mkdir /data/misc/mcRegistry 0775 system system
+    mkdir /data/misc/mcRegistry/TbStorage 0700 system system
+    symlink /persist/tee/00000000.authtokcont.backup /data/misc/mcRegistry/00000000.authtokcont.backup
+    export MC_AUTH_TOKEN_PATH /data/misc/mcRegistry
+    mkdir /data/usf 0700 system system
+
+    mkdir /persist/data/sfs 0700 system system
+    mkdir /persist/data/tz 0700 system system
+    mkdir /persist/tee 0700 system system
+    mkdir /persist/qti_fp 0700 system system
+
 on early-boot
     # SSR setup
     write /sys/bus/msm_subsys/devices/subsys0/restart_level "related"
@@ -330,91 +409,15 @@ on boot
     # For modem config copy
     write /data/misc/radio/copy_complete 1
 
-on post-fs-data
-
-    # Graphics
-    chmod 0664 /sys/devices/virtual/graphics/fb0/idle_time
-    chown system graphics /sys/devices/virtual/graphics/fb0/idle_time
-    write /sys/devices/virtual/graphics/fb0/idle_time 100
-
-    # NFC local data and nfcee xml storage
-    mkdir /data/nfc 0770 nfc nfc
-    mkdir /data/nfc/param 0770 nfc nfc
-    mkdir /data/vendor/nfc 0770 nfc nfc
-    mkdir /data/vendor/nfc/param 0770 nfc nfc
-
-    # NFC permissions
-    chmod 0666 /dev/pn544
-    chown nfc nfc /dev/pn544
-
-    # Create directory for fingerprint
-    mkdir /data/fpc 0770 system system
-
-    # Create folder for mm-qcamera-daemon
-    mkdir /data/vendor/camera 0770 camera camera
-
-    #create netmgr log dir
-    mkdir /data/vendor/netmgr 0770 radio radio
-    chmod 0770 /data/vendor/netmgr
-
-    # Create directory for tombstone
-    mkdir /data/tombstones 0771 system system
-    mkdir /data/tombstones/modem 0771 system system
-    mkdir /data/tombstones/lpass 0771 system system
-    mkdir /data/tombstones/wcnss 0771 system system
-    mkdir /data/tombstones/dsps 0771 system system
-
-    mkdir /data/misc/dts 0770 media audio
-    mkdir /data/misc/seemp 0700 system system
-    mkdir /data/misc/tloc/ 0700 system drmrpc
-    mkdir /data/misc/qvr 0770 system system
-    mkdir /data/misc/audio_pp 0771 media audio
-    mkdir /data/misc/mcRegistry 0775 system system
-    mkdir /data/misc/mcRegistry/TbStorage 0700 system system
-    symlink /persist/tee/00000000.authtokcont.backup /data/misc/mcRegistry/00000000.authtokcont.backup
-    export MC_AUTH_TOKEN_PATH /data/misc/mcRegistry
-    mkdir /data/usf 0700 system system
-
-    mkdir /persist/data/sfs 0700 system system
-    mkdir /persist/data/tz 0700 system system
-    mkdir /persist/tee 0700 system system
-    mkdir /persist/qti_fp 0700 system system
-
-on fs
-    mount_all /vendor/etc/fstab.qcom
-
-    # Add rfg_3 mounting from stock. This way we will still boot if partition doesn't actually exist on the device.
-    wait /dev/block/bootdevice/by-name/rfg_3
-    mount vfat /dev/block/bootdevice/by-name/rfg_3 /firmware/wsd ro shortname=lower,uid=3012,gid=3012,dmask=277,fmask=377
-
-    # Mount cradio image
-    mkdir /firmware/cradio 0771 system system
-    mount vfat /dev/block/bootdevice/by-name/cradio /firmware/cradio ro shortname=lower,uid=1000,gid=1000,dmask=227,fmask=337
-
-    # symlink firmware to /firmware/image
-    wait /system/bin/sh
-    class_start firmware-link
-    setprop ro.boot.firmware.cpe 1
-
-    # HTC feature: Support multiple firmware image mount points
-    write /sys/module/firmware_class/parameters/fw_path /firmware/image,/firmware/adsp,/firmware/radio,/firmware/slpi,/firmware/venus,/firmware/wsd,/vendor/firmware
-
-    chown root system /mnt/vendor/persist
-    chmod 0771 /mnt/vendor/persist
-    mkdir /mnt/vendor/persist/bluetooth 0770 bluetooth bluetooth
-    mkdir /mnt/vendor/persist/bms 0700 root system
-    mkdir /mnt/vendor/persist/data 0700 system system
-    mkdir /mnt/vendor/persist/display 0770 system graphics
-    mkdir /mnt/vendor/persist/hvdcp_opti 0770 root system
-    mkdir /mnt/vendor/persist/time 0770 system system
-    restorecon_recursive /mnt/vendor/persist
-
 on property:init.svc.bootanim=running
     write /sys/class/leds/wled/brightness 4095
 
 # Services begin here
 service vendor.netmgrd /vendor/bin/netmgrd
     class main
+    user root
+    group root wifi wakelock radio inet
+    writepid /dev/cpuset/system-background/tasks
 
 service adsprpcd /vendor/bin/adsprpcd
     class main
@@ -432,9 +435,10 @@ service htcdcpd /system/bin/htcdcpd
     class main
     user root
     group root
+    writepid /dev/cpuset/system-background/tasks
 
 ## imsdatadaemon starts with root and UID will be downgraded to SYSTEM.
-service vendor.imsqmidaemon /system/vendor/bin/imsqmidaemon
+service vendor.imsqmidaemon /vendor/bin/imsqmidaemon
     class main
     user radio
     socket ims_qmid stream 0660 system radio
@@ -442,7 +446,7 @@ service vendor.imsqmidaemon /system/vendor/bin/imsqmidaemon
     writepid /dev/cpuset/system-background/tasks
 
 # imsdatadaemon starts with root and UID will be downgraded to SYSTEM.
-service vendor.imsdatadaemon /system/vendor/bin/imsdatadaemon
+service vendor.imsdatadaemon /vendor/bin/imsdatadaemon
     class main
     user radio
     socket ims_datad stream 0660 system radio
@@ -453,13 +457,13 @@ service vendor.imsdatadaemon /system/vendor/bin/imsdatadaemon
 on property:vendor.ims.QMI_DAEMON_STATUS=1
     start vendor.imsdatadaemon
 
-service vendor.ims_rtp_daemon /system/vendor/bin/ims_rtp_daemon
+service vendor.ims_rtp_daemon /vendor/bin/ims_rtp_daemon
     class main
     user radio
     group radio vendor_qti_diag inet log
     writepid /dev/cpuset/system-background/tasks
 
-service vendor.imsrcsservice /system/vendor/bin/imsrcsd
+service vendor.imsrcsservice /vendor/bin/imsrcsd
     class main
     user radio
     group radio vendor_qti_diag inet log wakelock
@@ -468,26 +472,26 @@ service vendor.imsrcsservice /system/vendor/bin/imsrcsd
 on property:vendor.ims.DATA_DAEMON_STATUS=1
     restart vendor.ims_rtp_daemon
 
-
 # Start up peripheral manager
-service per_mgr /vendor/bin/pm-service
-    class late_start
+service vendor.per_mgr /vendor/bin/pm-service
+    class core
     user system
-    group system net_raw
+    group system
     writepid /dev/cpuset/system-background/tasks
 
-service per_proxy /vendor/bin/pm-proxy
-    class late_start
+service vendor.per_proxy /vendor/bin/pm-proxy
+    class core
     user system
     group system
     writepid /dev/cpuset/system-background/tasks
     disabled
 
-on property:init.svc.per_mgr=running
-    start per_proxy
+on property:init.svc.vendor.per_mgr=running
+    start vendor.per_proxy
 
 on property:sys.shutdown.requested=*
-    stop per_proxy
+    stop vendor.per_proxy
+    stop vendor.ims_rtp_daemon
 
 service pd_mapper /vendor/bin/pd-mapper
     class core
@@ -523,13 +527,13 @@ on property:init.svc.servicemanager=restarting
 on property:apexd.status=ready
     mount none /system/etc/swcodec/ld.config.txt /apex/com.android.media.swcodec/etc/ld.config.txt bind
 
-service qseecomd /vendor/bin/qseecomd
+service vendor.qseecomd /vendor/bin/qseecomd
     class core
     user root
     group root
     writepid /dev/cpuset/system-background/tasks
 
-service thermal-engine /system/vendor/bin/thermal-engine -c ${sys.qcom.thermalcfg:-/vendor/etc/thermal-engine.conf}
+service thermal-engine /vendor/bin/thermal-engine -c ${sys.qcom.thermalcfg:-/vendor/etc/thermal-engine.conf}
    class main
    user root
    socket thermal-send-client stream 0666 system system

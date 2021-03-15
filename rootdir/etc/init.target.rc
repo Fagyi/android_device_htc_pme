@@ -93,6 +93,13 @@ on fs
     mkdir /mnt/vendor/persist/time 0770 system system
     restorecon_recursive /mnt/vendor/persist
 
+on late-fs
+    # Required for time_daemon
+    mkdir /data/vendor/time 0700 system system
+
+    # Start time daemon early so that the system time can be set early
+    start time_daemon
+
 on post-fs-data
     # Graphics
     chmod 0664 /sys/devices/virtual/graphics/fb0/idle_time
